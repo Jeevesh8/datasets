@@ -23,7 +23,7 @@ import os
 
 import datasets
 
-import soudfile as sf
+import soundfile as sf
 
 _CITATION = """\
 @inproceedings{panayotov2015librispeech,
@@ -133,7 +133,7 @@ class LibrispeechASR(datasets.GeneratorBasedBuilder):
             for elem in f.readlines():
                 chapter_id = elem.strip().split()[0].split('_')[1]
                 if chapter_id not in self.chapter_to_idx:
-                    self.chapter_to_idx[]=i
+                    self.chapter_to_idx[chapter_id]=i
                     i+=1
         
         self.id_to_text = dict()
@@ -156,7 +156,7 @@ class LibrispeechASR(datasets.GeneratorBasedBuilder):
                 line = line.strip().split()
                 
                 if cur_file != line[1]+'.wav':
-                    audio, sr = sf.read(os.path.join(archive_path, line[1]+'.wav')))
+                    audio, sr = sf.read(os.path.join(archive_path, line[1]+'.wav'))
                 
                 start_time, end_time = float(line[2]), float(line[3])
                 
