@@ -111,7 +111,7 @@ class LibrispeechASR(datasets.GeneratorBasedBuilder):
         )
 
     def _split_generators(self, dl_manager):
-        root = '/content'
+        root = self.config.data_dir
         archive_path = {'train' : root+'/train/'
                         'test': root+'/test/',} #dl_manager.download_and_extract(_DL_URLS[self.config.name])
 
