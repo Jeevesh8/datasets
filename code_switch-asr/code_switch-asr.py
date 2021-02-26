@@ -98,7 +98,7 @@ class LibrispeechASR(datasets.GeneratorBasedBuilder):
             description=_DESCRIPTION,
             features=datasets.Features(
                 {
-                    "audio": datasets.Sequence(feature='float64'),
+                    "audio": datasets.Sequence(feature=datasets.Value('float64')),
                     "text": datasets.Value("string"),
                     "speaker_id": datasets.Value("int64"),
                     "chapter_id": datasets.Value("int64"),
@@ -112,8 +112,9 @@ class LibrispeechASR(datasets.GeneratorBasedBuilder):
 
     def _split_generators(self, dl_manager):
         root = self.config.data_dir
-        archive_path = {'train' : os.path.join(root, 'train/')
-                        'test': os.path.join(root, '/test/'),} #dl_manager.download_and_extract(_DL_URLS[self.config.name])
+        print("Here:", root)
+        archive_path = {'train' : os.path.join(root, 'train/'),
+                        'test': os.path.join(root, 'test/'),} #dl_manager.download_and_extract(_DL_URLS[self.config.name])
 
         train_splits = [
                 datasets.SplitGenerator(name='train', gen_kwargs={"archive_path": archive_path['test']}),
@@ -166,8 +167,8 @@ class LibrispeechASR(datasets.GeneratorBasedBuilder):
                     "id" : line[0],
                     "speaker_id" : self.speaker_to_idx[line[0].split('_')[0]],
                     "chapter_id" : self.chapter_to_idx[line[1]],
-                    "text" : self.id_to_text[line[1]],
-                    "audio" : audio[start_time*sr:end_time*sr]
+                    "text" : self.id_to_text[line[0]],
+                    "audio" : audio[int(start_time*sr):int(end_time*sr)]
                 }
                 
                 yield line[0], example
