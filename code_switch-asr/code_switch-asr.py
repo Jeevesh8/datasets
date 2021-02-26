@@ -39,7 +39,7 @@ Download dataset as:
 !tar -xzf Hindi-English_test.tar.gz
 ```
 
-Download and install datasets as:
+Download and install datasets library as:
 ```
 !git clone https://github.com/Jeevesh8/datasets
 !cd datasets
