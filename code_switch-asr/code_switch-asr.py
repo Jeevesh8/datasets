@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Librispeech automatic speech recognition dataset."""
+"""CodeSwitch automatic speech recognition dataset."""
 
 from __future__ import absolute_import, division, print_function
 
@@ -26,36 +26,42 @@ import datasets
 import soundfile as sf
 
 _CITATION = """\
-@inproceedings{panayotov2015librispeech,
-  title={Librispeech: an ASR corpus based on public domain audio books},
-  author={Panayotov, Vassil and Chen, Guoguo and Povey, Daniel and Khudanpur, Sanjeev},
-  booktitle={Acoustics, Speech and Signal Processing (ICASSP), 2015 IEEE International Conference on},
-  pages={5206--5210},
-  year={2015},
-  organization={IEEE}
-}
+
 """
 
 _DESCRIPTION = """\
-LibriSpeech is a corpus of approximately 1000 hours of read English speech with sampling rate of 16 kHz,
-prepared by Vassil Panayotov with the assistance of Daniel Povey. The data is derived from read
-audiobooks from the LibriVox project, and has been carefully segmented and aligned.87
 
-Note that in order to limit the required storage for preparing this dataset, the audio
-is stored in the .flac format and is not converted to a float32 array. To convert, the audio
-file to a float32 array, please make use of the `.map()` function as follows:
+Download dataset as:
 
+```
+!wget http://www.openslr.org/resources/104/Hindi-English_test.zip
+!unzip -P e*F}[2]? Hindi-English_test.zip
+!tar -xzf Hindi-English_test.tar.gz
+```
+
+Download and install datasets as:
+```
+!git clone https://github.com/Jeevesh8/datasets
+!cd datasets
+!git checkout hi-en-code_switch-asr
+
+!pip install .
+
+!cd src
+```
+
+Usage:
 
 ```python
-import soundfile as sf
 
-def map_to_array(batch):
-    speech_array, _ = sf.read(batch["file"])
-    batch["speech"] = speech_array
-    return batch
+from datasets import load_dataset
+from datasets.utils.file_utils import DownloadConfig
 
-dataset = dataset.map(map_to_array, remove_columns=["file"])
+ds = load_dataset(<location of this script>, 
+                  data_dir= <location where data was downloaded>, 
+                  download_config = DownloadConfig(local_files_only=True))
 ```
+
 """
 
 _URL = "http://www.openslr.org/12"
@@ -70,8 +76,8 @@ _DL_URLS = {
 }
 
 
-class LibrispeechASRConfig(datasets.BuilderConfig):
-    """BuilderConfig for LibriSpeechASR."""
+class CodeSwitchASRConfig(datasets.BuilderConfig):
+    """BuilderConfig for CodeSwitchASR."""
 
     def __init__(self, **kwargs):
         """
@@ -82,15 +88,15 @@ class LibrispeechASRConfig(datasets.BuilderConfig):
           url: `string`, url for information about the data set
           **kwargs: keyword arguments forwarded to super.
         """
-        super(LibrispeechASRConfig, self).__init__(version=datasets.Version("0.0.0", ""), **kwargs)
+        super(CodeSwitchASRConfig, self).__init__(version=datasets.Version("0.0.0", ""), **kwargs)
 
 
-class LibrispeechASR(datasets.GeneratorBasedBuilder):
-    """Librispeech dataset."""
+class CodeSwitchASR(datasets.GeneratorBasedBuilder):
+    """CodeSwitch dataset."""
 
     BUILDER_CONFIGS = [
-        LibrispeechASRConfig(name="hi-en", description="Hindi-English Code-switched speech."),
-        LibrispeechASRConfig(name="bn-en", description="Bengali-English Code-switched speech."),
+        CodeSwitchASRConfig(name="hi-en", description="Hindi-English Code-switched speech."),
+        CodeSwitchASRConfig(name="bn-en", description="Bengali-English Code-switched speech."),
     ]
 
     def _info(self):
@@ -111,10 +117,12 @@ class LibrispeechASR(datasets.GeneratorBasedBuilder):
         )
 
     def _split_generators(self, dl_manager):
-        root = self.config.data_dir
-        print("Here:", root)
-        archive_path = {'train' : os.path.join(root, 'train/'),
-                        'test': os.path.join(root, 'test/'),} #dl_manager.download_and_extract(_DL_URLS[self.config.name])
+        if self.config.name!='default':
+            archive_path = dl_manager.download_and_extract(_DL_URLS[self.config.name])
+        else:
+            root = self.config.data_dir
+            archive_path = {'train' : os.path.join(root, 'train/'),
+                            'test': os.path.join(root, 'test/'),}
 
         train_splits = [
                 datasets.SplitGenerator(name='train', gen_kwargs={"archive_path": archive_path['test']}),
@@ -146,7 +154,7 @@ class LibrispeechASR(datasets.GeneratorBasedBuilder):
                 self.id_to_text[id] = text
         
     def _generate_examples(self, archive_path):
-        """Generate examples from a Librispeech archive_path."""
+        """Generate examples from a CodeSwitch archive_path."""
         segments_file = os.path.join(archive_path, 'transcripts/segments')
         speaker_file = os.path.join(archive_path, 'transcripts/spkr_list')
         text_file = os.path.join(archive_path, 'transcripts/text')
