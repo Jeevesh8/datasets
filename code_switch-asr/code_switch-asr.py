@@ -125,7 +125,7 @@ class CodeSwitchASR(datasets.GeneratorBasedBuilder):
                             'test': os.path.join(root, 'test/'),}
 
         train_splits = [
-                datasets.SplitGenerator(name='train', gen_kwargs={"archive_path": archive_path['test']}),
+                datasets.SplitGenerator(name='train', gen_kwargs={"archive_path": archive_path['train']}),
             ]
 
         return train_splits + [
