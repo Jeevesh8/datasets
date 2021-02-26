@@ -47,7 +47,7 @@ Download and install datasets as:
 
 !pip install .
 
-!cd src
+!cd ..
 ```
 
 Usage:
