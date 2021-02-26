@@ -43,7 +43,7 @@ Download and install datasets library as:
 ```
 !git clone https://github.com/deterministic-algorithms-lab/datasets
 !cd datasets
-!git checkout hi-en-code_switch-asr
+!git checkout code_switch-asr
 
 !pip install .
 
@@ -57,7 +57,7 @@ Usage:
 from datasets import load_dataset
 from datasets.utils.file_utils import DownloadConfig
 
-ds = load_dataset(<location of this script>, 
+ds = load_dataset(<folder containing this script>, 
                   data_dir= <location where data was downloaded>, 
                   download_config = DownloadConfig(local_files_only=True))
 ```
