@@ -41,7 +41,7 @@ Download dataset as:
 
 Download and install datasets library as:
 ```
-!git clone https://github.com/Jeevesh8/datasets
+!git clone https://github.com/deterministic-algorithms-lab/datasets
 !cd datasets
 !git checkout hi-en-code_switch-asr
 
