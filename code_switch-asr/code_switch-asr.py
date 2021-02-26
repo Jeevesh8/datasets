@@ -104,26 +104,26 @@ class CodeSwitchASR(datasets.GeneratorBasedBuilder):
             description=_DESCRIPTION,
             features=datasets.Features(
                 {
-                    "audio": datasets.Sequence(feature=datasets.Value('float64')),
+                    "speech": datasets.Sequence(feature=datasets.Value('float32')),
                     "text": datasets.Value("string"),
                     "speaker_id": datasets.Value("int64"),
                     "chapter_id": datasets.Value("int64"),
                     "id": datasets.Value("string"),
                 }
             ),
-            supervised_keys=("audio", "text"),
+            supervised_keys=("speech", "text"),
             homepage=_URL,
             citation=_CITATION,
         )
 
     def _split_generators(self, dl_manager):
-        if self.config.name!='default':
-            archive_path = dl_manager.download_and_extract(_DL_URLS[self.config.name])
-        else:
+        if self.config.name not in _DL_URLS:
             root = self.config.data_dir
             archive_path = {'train' : os.path.join(root, 'train/'),
                             'test': os.path.join(root, 'test/'),}
-
+        else:
+            archive_path = dl_manager.download_and_extract(_DL_URLS[self.config.name])
+        
         train_splits = [
                 datasets.SplitGenerator(name='train', gen_kwargs={"archive_path": archive_path['train']}),
             ]
@@ -167,7 +167,7 @@ class CodeSwitchASR(datasets.GeneratorBasedBuilder):
                 line = line.strip().split()
                 
                 if cur_file != line[1]+'.wav':
-                    audio, sr = sf.read(os.path.join(archive_path, line[1]+'.wav'))
+                    speech, sr = sf.read(os.path.join(archive_path, line[1]+'.wav'))
                 
                 start_time, end_time = float(line[2]), float(line[3])
                 
@@ -176,7 +176,7 @@ class CodeSwitchASR(datasets.GeneratorBasedBuilder):
                     "speaker_id" : self.speaker_to_idx[line[0].split('_')[0]],
                     "chapter_id" : self.chapter_to_idx[line[1]],
                     "text" : self.id_to_text[line[0]],
-                    "audio" : audio[int(start_time*sr):int(end_time*sr)]
+                    "speech" : speech[int(start_time*sr):int(end_time*sr)]
                 }
                 
                 yield line[0], example
