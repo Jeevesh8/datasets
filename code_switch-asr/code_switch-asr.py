@@ -66,6 +66,7 @@ ds = load_dataset(<folder containing this script>,
 
 _URL = "http://www.openslr.org/12"
 _DL_URL = "http://www.openslr.org/resources/104/"
+_MONO_DL_URL = "http://www.openslr.org/resources/103/"
 
 _DL_URLS = {
     "hi-en" : {"train": _DL_URL+'Hindi-English_train.zip',
@@ -73,6 +74,15 @@ _DL_URLS = {
     
     "bn-en": {"train": _DL_URL+'Bengali-English_train.zip',
               "test": _DL_URL+'Bengali-English_test.zip',},
+    
+    "hi":    {"train": _MONO_DL_URL+'Hindi_train.zip',
+              "test": _MONO_DL_URL+'Hindi_test.zip',},
+    
+    "mr":    {"train": _MONO_DL_URL+'Marathi_train.zip',
+              "test": _MONO_DL_URL+'Marathi_test.zip',},
+    
+    "od":    {"train": _MONO_DL_URL+'Odia_train.zip',
+              "test": _MONO_DL_URL+'Odia_test.zip',},
 }
 
 
@@ -97,6 +107,9 @@ class CodeSwitchASR(datasets.GeneratorBasedBuilder):
     BUILDER_CONFIGS = [
         CodeSwitchASRConfig(name="hi-en", description="Hindi-English Code-switched speech."),
         CodeSwitchASRConfig(name="bn-en", description="Bengali-English Code-switched speech."),
+        CodeSwitchASRConfig(name="hi", description="Hindi monolingual speech."),
+        CodeSwitchASRConfig(name="mr", description="Marathi monolingual speech."),
+        CodeSwitchASRConfig(name="od", description="Odia monolingual speech."),
     ]
 
     def _info(self):
